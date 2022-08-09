@@ -15,22 +15,24 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
 
-    public List<Customer> getAll(){
-       List<Customer> resultPage = (List<Customer>)customerRepository.findAll();
-       return resultPage;
-       }
-       public long getCount() {
-           long count = customerRepository.count();
-           if (count == 0) {
-               count = 999;
-           } return count;
+    public List<Customer> getAll() {
+        List<Customer> resultPage = (List<Customer>) customerRepository.findAll();
+        return resultPage;
+    }
 
-       }
+    public long getCount() {
+        long count = customerRepository.count();
+        if (count == 0) {
+            count = 999;
+        }
+        return count;
+
+    }
 
 
-
-public Long saveCustomer(Customer newCustomer){
+    public Long saveCustomer(Customer newCustomer) {
         Long id = customerRepository.save(newCustomer).getId();
-return id;
-}}
+        return id;
+    }
+}
 
