@@ -1,30 +1,39 @@
-
-
-
 <!doctype html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="HandheldFriendly" content="true" />
-    <meta name="apple-mobile-web-app-capable" content="YES" />
-    <meta charset="utf-8" />
-    <base href="" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="apple-mobile-web-app-capable" content="YES"/>
+    <meta charset="utf-8"/>
+    <base href=""/>
     <title>Главная</title>
-    <link href="index.html@format=feed&amp;type=rss" rel="alternate" type="application/rss+xml" title="RSS 2.0" />
-    <link href="index.html@format=feed&amp;type=atom" rel="alternate" type="application/atom+xml" title="Atom 1.0" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
-    <link href="http://www.fleksoprint.ru/plugins/system/jce/css/content.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/system/css/system.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/fonts/font.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/js/lib/owl-carousel/css/owl.carousel.min.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/js/lib/owl-carousel/css/owl.theme.default.min.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/css/jquery.fancybox.min.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/css/style.desktop.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/css/style.tablet.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/css/style.tablet-small.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/css/style.mobile.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
-    <link href="http://www.fleksoprint.ru/templates/flexo/css/custom.css?6a638a55278232801f2eec5053360a43" rel="stylesheet" />
+    <link href="index.html@format=feed&amp;type=rss" rel="alternate" type="application/rss+xml" title="RSS 2.0"/>
+    <link href="index.html@format=feed&amp;type=atom" rel="alternate" type="application/atom+xml" title="Atom 1.0"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/favicon.ico" rel="shortcut icon"
+          type="image/vnd.microsoft.icon"/>
+    <link href="http://www.fleksoprint.ru/plugins/system/jce/css/content.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/system/css/system.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/fonts/font.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/js/lib/owl-carousel/css/owl.carousel.min.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/js/lib/owl-carousel/css/owl.theme.default.min.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/css/jquery.fancybox.min.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/css/style.desktop.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/css/style.tablet.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/css/style.tablet-small.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/css/style.mobile.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
+    <link href="http://www.fleksoprint.ru/templates/flexo/css/custom.css?6a638a55278232801f2eec5053360a43"
+          rel="stylesheet"/>
     <style>
         #scrollToTop {
             cursor: pointer;
@@ -45,7 +54,8 @@
             padding-right: 12px;
             padding-top: 12px;
             padding-bottom: 12px;
-            right: 20px; bottom: 20px;
+            right: 20px;
+            bottom: 20px;
         }
 
         #scrollToTop:hover {
@@ -57,11 +67,33 @@
             display: block;
             margin: 0 auto;
         }
-        #scrollToTop:hover, #scrollToTop{
+
+        #scrollToTop:hover, #scrollToTop {
             background: transparent
         }
     </style>
-    <script type="application/json" class="joomla-script-options new">{"csrf.token":"18b150a10ad899907189b02353ba4ba4","system.paths":{"root":"","base":""},"joomla.jtext":{"TPL_FLEXO_ALTOPEN":"is open","TPL_FLEXO_ALTCLOSE":"is closed","TPL_FLEXO_TEXTRIGHTOPEN":"Open info","TPL_FLEXO_TEXTRIGHTCLOSE":"Close info","TPL_FLEXO_FONTSIZE":"Font size","TPL_FLEXO_BIGGER":"Bigger","TPL_FLEXO_RESET":"Reset","TPL_FLEXO_SMALLER":"Smaller","TPL_FLEXO_INCREASE_SIZE":"Increase size","TPL_FLEXO_REVERT_STYLES_TO_DEFAULT":"Revert styles to default","TPL_FLEXO_DECREASE_SIZE":"Decrease size","TPL_FLEXO_OPENMENU":"Open Menu","TPL_FLEXO_CLOSEMENU":"Close Menu"}}</script>
+    <script type="application/json" class="joomla-script-options new">{
+        "csrf.token": "18b150a10ad899907189b02353ba4ba4",
+        "system.paths": {
+            "root": "",
+            "base": ""
+        },
+        "joomla.jtext": {
+            "TPL_FLEXO_ALTOPEN": "is open",
+            "TPL_FLEXO_ALTCLOSE": "is closed",
+            "TPL_FLEXO_TEXTRIGHTOPEN": "Open info",
+            "TPL_FLEXO_TEXTRIGHTCLOSE": "Close info",
+            "TPL_FLEXO_FONTSIZE": "Font size",
+            "TPL_FLEXO_BIGGER": "Bigger",
+            "TPL_FLEXO_RESET": "Reset",
+            "TPL_FLEXO_SMALLER": "Smaller",
+            "TPL_FLEXO_INCREASE_SIZE": "Increase size",
+            "TPL_FLEXO_REVERT_STYLES_TO_DEFAULT": "Revert styles to default",
+            "TPL_FLEXO_DECREASE_SIZE": "Decrease size",
+            "TPL_FLEXO_OPENMENU": "Open Menu",
+            "TPL_FLEXO_CLOSEMENU": "Close Menu"
+        }
+    }</script>
     <script src="http://www.fleksoprint.ru/media/system/js/mootools-core.js?6a638a55278232801f2eec5053360a43"></script>
     <script src="http://www.fleksoprint.ru/media/system/js/core.js?6a638a55278232801f2eec5053360a43"></script>
     <script src="http://www.fleksoprint.ru/media/system/js/mootools-more.js?6a638a55278232801f2eec5053360a43"></script>
@@ -75,33 +107,35 @@
     <script src="http://www.fleksoprint.ru/templates/flexo/js/lib/owl-carousel/js/owl.carousel.min.js?6a638a55278232801f2eec5053360a43"></script>
     <script src="http://www.fleksoprint.ru/templates/flexo/js/lib/jquery.fancybox.min.js?6a638a55278232801f2eec5053360a43"></script>
     <script src="http://www.fleksoprint.ru/templates/flexo/js/scripts.js?6a638a55278232801f2eec5053360a43"></script>
-    <!--[if lt IE 9]><script src="/media/jui/js/html5.js?6a638a55278232801f2eec5053360a43"></script><![endif]-->
+    <!--[if lt IE 9]>
+    <script src="/media/jui/js/html5.js?6a638a55278232801f2eec5053360a43"></script><![endif]-->
     <script>
-        document.addEvent('domready', function() {
+        document.addEvent('domready', function () {
             new Skyline_ScrollToTop({
-                'image':		'/images/top.png',
-                'text':			'',
-                'title':		'',
-                'className':	'scrollToTop',
-                'duration':		500,
-                'transition':	Fx.Transitions.linear
+                'image': '/images/top.png',
+                'text': '',
+                'title': '',
+                'className': 'scrollToTop',
+                'duration': 500,
+                'transition': Fx.Transitions.linear
             });
         });
-        jQuery(window).on('load',  function() {
+        jQuery(window).on('load', function () {
             new JCaption('img.caption');
         });
-        var big        = '72%';
-        var small      = '53%';
-        var bildauf    = '/templates/flexo/images/plus.png';
-        var bildzu     = '/templates/flexo/images/minus.png';
-        var rightopen  = 'Open info';
+        var big = '72%';
+        var small = '53%';
+        var bildauf = '/templates/flexo/images/plus.png';
+        var bildzu = '/templates/flexo/images/minus.png';
+        var rightopen = 'Open info';
         var rightclose = 'Close info';
-        var altopen    = 'is open';
-        var altclose   = 'is closed';
+        var altopen = 'is open';
+        var altclose = 'is closed';
 
     </script>
 
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=8bcad094-1c9d-49ea-8f63-0a29c35b06e0" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=8bcad094-1c9d-49ea-8f63-0a29c35b06e0"
+            type="text/javascript"></script>
     <script src="http://www.fleksoprint.ru/templates/flexo/js/yandex.js" type="text/javascript"></script>
 </head>
 
@@ -111,9 +145,6 @@
 <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 <meta name="generator" content="Hugo 0.98.0">
 <title>Checkout example · Bootstrap v5.2</title>
-
-
-
 
 
 <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -173,14 +204,15 @@
 
 
 <!-- Custom styles for this template -->
-<link rel="stylesheet" th:href ="@{/css/form-validation.js}"/>
+<link rel="stylesheet" th:href="@{/css/form-validation.js}"/>
 </head>
 <!-- header section -->
 <section class="header-section">
 
     <div class="row">
 
-        <a class="logo" title="АО ФлексоПринт" href="/main"><img src="http://www.fleksoprint.ru/images/oformlen/logo.svg" alt="ФлексоПринт" /></a>
+        <a class="logo" title="АО ФлексоПринт" href="/main"><img
+                src="http://www.fleksoprint.ru/images/oformlen/logo.svg" alt="ФлексоПринт"/></a>
 
 
         <div class="info">
@@ -190,7 +222,8 @@
                 САМОКЛЕЯЩИЕСЯ ЭТИКЕТКИ ОТ АО «ФЛЕКСО ПРИНТ»
             </h1>
             <p>
-                <span class="phone"><span class="blue-text">Тел:</span> <a href="tel:+78442979020">+7 (8442) 97-90-20</a></span>
+                <span class="phone"><span class="blue-text">Тел:</span> <a
+                        href="tel:+78442979020">+7 (8442) 97-90-20</a></span>
                 <span class="slogan">
 ОТ КЛАССИКИ ДО АВАНГАРДА
 </span>
@@ -198,24 +231,33 @@
         </div>
         <a href="javascript:void(0)" class="menu-link"></a>
     </div>
-    <div class="custom banner"  >
-        <img src="http://www.fleksoprint.ru/images/banners/head-banner.jpg" alt="АО ФЛЕКСОПРИНТ" /></div>
+    <div class="custom banner">
+        <img src="http://www.fleksoprint.ru/images/banners/head-banner.jpg" alt="АО ФЛЕКСОПРИНТ"/></div>
     <!--head menu-->
     <nav class="head-menu">
 
         <ul class="nav menu mod-list">
-            <li class="item-101  default current active"><a href="/main" >Главная</a></li><li
-                class="item-107 "><a href="/about" >О компании</a></li><li
-                class="item-108 "><a href="/advant" >Наши преимущества</a></li><li
-                class="item-109 "><a href="/partners" >Партнеры</a></li><li
-                class="item-111 "><a href="/jobseeker" >Соискателю</a></li><li
-                class="item-112 "><a href="/geo" >География продаж</a></li><li
-                class="item-113 "><a href="/contacts" >Контакты</a></li><li
+            <li class="item-101  default current active"><a href="/main">Главная</a></li>
+            <li
+                    class="item-107 "><a href="/about">О компании</a></li>
+            <li
+                    class="item-108 "><a href="/advant">Наши преимущества</a></li>
+            <li
+                    class="item-109 "><a href="/partners">Партнеры</a></li>
+            <li
+                    class="item-111 "><a href="/jobseeker">Соискателю</a></li>
+            <li
+                    class="item-112 "><a href="/geo">География продаж</a></li>
+            <li
+                    class="item-113 "><a href="/contacts">Контакты</a></li>
+            <li
 
-                class="item-114 "><a href="/schema" >Схема проезда</a></li><li
-                class="item-130 hidden-lg"><a href="/label" class="hidden-lg">Этикетка</a></li>
+                    class="item-114 "><a href="/schema">Схема проезда</a></li>
+            <li
+                    class="item-130 hidden-lg"><a href="/label" class="hidden-lg">Этикетка</a></li>
             <li class="item-131 hidden-lg"><a href="/pack" class="hidden-lg">Упаковка</a></li>
-            <li class="item-132 hidden-lg"><a href="/types" class="hidden-lg">Виды отделок</a></li></ul>
+            <li class="item-132 hidden-lg"><a href="/types" class="hidden-lg">Виды отделок</a></li>
+        </ul>
         <div class="menu-bg"></div>
     </nav>
     <!--end head menu-->
@@ -286,7 +328,8 @@
                     <div class="row g-3">
                         <div class="col-sm-6">
                             <label for="firstName" class="form-label">Имя</label>
-                            <input type="text" class="form-control" name = "firstName"  id="firstName" placeholder="" value="" required>
+                            <input type="text" class="form-control" name="firstName" id="firstName" placeholder=""
+                                   value="" required>
                             <div class="invalid-feedback">
 
                             </div>
@@ -294,7 +337,8 @@
 
                         <div class="col-sm-6">
                             <label for="lastName" class="form-label">Фамилия</label>
-                            <input type="text" class="form-control"  name = "lastName" id="lastName" placeholder="" value="" required>
+                            <input type="text" class="form-control" name="lastName" id="lastName" placeholder=""
+                                   value="" required>
                             <div class="invalid-feedback">
                             </div>
                         </div>
@@ -303,7 +347,8 @@
                             <label for="company" class="form-label">Наименование организации</label>
                             <div class="input-group has-validation">
                                 <span class="input-group-text">Юр лицо</span>
-                                <input type="text" class="form-control" name="company" id="company" placeholder="Организация" required>
+                                <input type="text" class="form-control" name="company" id="company"
+                                       placeholder="Организация" required>
                                 <div class="invalid-feedback">
                                     Пожалуйста введите наименование организации
                                 </div>
@@ -314,7 +359,8 @@
                             <label for="company" class="form-label">Телефон</label>
                             <div class="input-group has-validation">
 
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="+7(000)000-00-00" required>
+                                <input type="text" class="form-control" name="phone" id="phone"
+                                       placeholder="+7(000)000-00-00" required>
                                 <div class="invalid-feedback">
                                     Пожалуйста введите телефон
                                 </div>
@@ -322,8 +368,10 @@
                         </div>
 
                         <div class="col-12">
-                            <label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
-                            <input type="email" class="form-control" name = "email" id="email" placeholder="you@example.com">
+                            <label for="email" class="form-label">Email <span
+                                    class="text-muted">(Optional)</span></label>
+                            <input type="email" class="form-control" name="email" id="email"
+                                   placeholder="you@example.com">
                             <div class="invalid-feedback">
                                 Пожалуста введите Email
                             </div>
@@ -331,7 +379,8 @@
 
                         <div class="col-12">
                             <label for="address" class="form-label">Адрес</label>
-                            <input type="text" class="form-control" name = "address" id="address" placeholder="Город улица дом" required>
+                            <input type="text" class="form-control" name="address" id="address"
+                                   placeholder="Город улица дом" required>
                             <div class="invalid-feedback">
                                 Пожалуйста введите адрес
                             </div>
@@ -340,10 +389,9 @@
                     </div>
 
 
-
                     <div class="col-12 m-15">
                         <label for="country" class="form-label">Выберите материал</label>
-                        <select class="form-select" name = "material" id="country" required>
+                        <select class="form-select" name="material" id="country" required>
                             <option>Бумага</option>
                             <option>Бумага дизайнерская</option>
                             <option>Бумага метализированная</option>
@@ -397,7 +445,7 @@
                         </div>
                     </div>
 
-                    <button class="w-100 btn btn-primary btn-lg "  type="submit"  >Continue to checkout</button>
+                    <button class="w-100 btn btn-primary btn-lg " type="submit">Continue to checkout</button>
 
                 </form>
             </div>

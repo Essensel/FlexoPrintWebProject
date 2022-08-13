@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.vishnyakov.flexoPrint.controllers.beens.Customer;
 import ru.vishnyakov.flexoPrint.controllers.services.CustomerService;
 
+import java.util.List;
+
+import static org.apache.logging.log4j.util.LambdaUtil.getAll;
+
 
 @Controller
 public class FlexoController {
 
 
-@Autowired
+    @Autowired
     private CustomerService customerService;
 
     @RequestMapping("/main")
@@ -24,23 +28,31 @@ public class FlexoController {
         return "mainPaige";
     }
 
+    @RequestMapping("/list/")
+    public String showListOfCustomers(ModelMap modelMap) {
+       List<Customer> customerList = customerService.getAll();
+       modelMap.addAttribute(customerList.size());
+        return "listOfCustomers";
+    }
+
     @GetMapping("/check")
     public String showCheckPoint(ModelMap model) {
         return "info";
     }
+
     @GetMapping("/helpMe")
     public String showmMeHelp(ModelMap model) {
         return "checkpoint";
     }
 
-    @PostMapping ("helpMe")
+    @PostMapping("helpMe")
     public String addNewCustomer(@RequestParam String firstName,
-                                 String lastName,  String company,
+                                 String lastName, String company,
                                  String email, String address,
                                  String phone, String comment,
                                  ModelMap model) {
 
-        Customer newCustomer = new Customer(firstName, lastName, company, email, address,phone, comment );
+        Customer newCustomer = new Customer(firstName, lastName, company, email, address, phone, comment);
         customerService.saveCustomer(newCustomer);
         return "afterChecking";
     }
@@ -64,26 +76,32 @@ public class FlexoController {
     public String showGeography() {
         return "geography";
     }
+
     @GetMapping("/partners")
     public String showPartners() {
         return "partners";
     }
+
     @GetMapping("/jobseeker")
     public String showJobseekers() {
         return "jobseeker";
     }
+
     @GetMapping("/contacts")
     public String showContacts() {
         return "contacts";
     }
+
     @GetMapping("/types")
     public String showToF() {
         return "types-of-finishes";
     }
+
     @GetMapping("/schema")
     public String showSchema() {
         return "schema";
     }
+
     @GetMapping("/pack")
     public String showPack() {
         return "pack";

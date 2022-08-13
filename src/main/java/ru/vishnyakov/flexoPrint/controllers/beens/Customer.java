@@ -1,7 +1,6 @@
 package ru.vishnyakov.flexoPrint.controllers.beens;
 
 
-
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -21,19 +20,20 @@ public class Customer {
     private String name_of_company;
     private String address;
     private String phone;
-   private String comment;
+    private String comment;
 
-public Customer(){
+    public Customer() {
 
-}
-    public Customer(String name, String last_name,String nameOfCompany, String email, String address, String phone,String comment) {
-      this.name = name;
-      this.last_name = last_name;
-      this.name_of_company = nameOfCompany;
-      this.email = email;
-      this.address = address;
-      this.phone = phone;
-     this.comment = comment;
+    }
+
+    public Customer(String name, String last_name, String nameOfCompany, String email, String address, String phone, String comment) {
+        this.name = name;
+        this.last_name = last_name;
+        this.name_of_company = nameOfCompany;
+        this.email = email;
+        this.address = address;
+        this.phone = phone;
+        this.comment = comment;
     }
 
     public Long getId() {
