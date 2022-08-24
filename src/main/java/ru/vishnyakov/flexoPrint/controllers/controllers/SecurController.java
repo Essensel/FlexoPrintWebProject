@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.vishnyakov.flexoPrint.controllers.beens.User;
@@ -18,6 +19,13 @@ public class SecurController {
     public String showLogPage(ModelMap map){
         return "log";
     }
+    @PostMapping("/login/")
+
+    public String userCkecking(ModelMap map){
+        return "log";
+    }
+
+
     @GetMapping("/login")
     public String showLoginPage(ModelMap map){
         return "login";
