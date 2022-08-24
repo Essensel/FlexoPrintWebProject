@@ -1,0 +1,83 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/heroic-features.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="row">
+
+        <!-- Post Content Column -->
+        <div class="col-lg-12">
+            <!--CONTENT-->
+            <form action="/login/" method="post">
+                <div  th:if="${param.error}" style="color: red">
+                    <h2> Неправильный логин или пароль</h2>
+                </div>
+
+                <div class="card my-4">
+                    <h5 class="card-header">Авторизация</h5>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Логин"
+                                    name="username"
+                            >
+                        </div>
+                        <div class="input-group mb-3">
+                            <input
+                                    type="password"
+                                    class="form-control"
+                                    placeholder="Пароль"
+                                    name="password"
+                            >
+                        </div>
+
+                        <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-secondary" type="submit">Войти</button>
+                        </span>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <!--CONTENT-->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Bootstrap core JavaScript -->
+<script src="/jquery/jquery.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
