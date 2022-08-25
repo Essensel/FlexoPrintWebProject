@@ -22,6 +22,7 @@ protected String colors;
     protected String imgName;
     protected String design;
     protected Date orderDate;
+    protected String calculatedCost;
     @ManyToOne
     protected Customer orderСreator;
 
@@ -31,7 +32,7 @@ public Order(){
 }
 
     public Order(String design,Long orderSize, String materialType, String varnish,String processing,
-                 int width, int length, String colors){
+                 int width, int length, String colors, String calculatedCost ){
 this.orderSize = orderSize;
 this.colors = colors;
 this.design = design;
@@ -40,8 +41,30 @@ this.varnish = varnish;
 this.processing = processing;
 this.width = width;
 this.length = length;
+this.calculatedCost = calculatedCost;
         Calendar calendar = new GregorianCalendar();
         this.orderDate = calendar.getTime();
+    }
+    public Order(String design,Long orderSize, String materialType, String varnish,String processing,
+                 int width, int length, String colors){
+        this.orderSize = orderSize;
+        this.colors = colors;
+        this.design = design;
+        this.materialType = materialType;
+        this.varnish = varnish;
+        this.processing = processing;
+        this.width = width;
+        this.length = length;
+        Calendar calendar = new GregorianCalendar();
+        this.orderDate = calendar.getTime();
+    }
+
+    public String getCalculatedCost() {
+        return calculatedCost;
+    }
+
+    public void setCalculatedCost(String calculatedCost) {
+        this.calculatedCost = calculatedCost;
     }
 
     public String getColors() {
@@ -135,6 +158,40 @@ this.length = length;
 
     public String getProcessing() {
         return processing;
+    }
+    public String geTextOfProcessing() {
+   String processingRussianTxt = "";
+
+        if (processing.equals("") || processing.equals(" ")) {
+            processingRussianTxt = "Без дополнительной обработки";
+        } else {
+            processing.trim();
+
+            for (String retval : processing.split(" ")) {
+                switch (retval) {
+                    case "coldFoil":
+                       processingRussianTxt+="Холодное тиснение. ";
+                        break;
+                    case "hotFoil":
+                        processingRussianTxt+="Горячее тиснение. ";
+                        break;
+                    case "lamination":
+                       processingRussianTxt+="Ламинация. ";
+                       break;
+                    case "relamDelam":
+                        processingRussianTxt+="Печать по клеевому слою. ";
+                        break;
+                    case "congrev":
+                        processingRussianTxt+="Конгрев. ";
+                        break;
+                    case "traf":
+                        processingRussianTxt+="Трафаретная печать. ";
+                        break;
+                }
+            }
+        }
+
+return processingRussianTxt;
     }
 
     public Customer getOrderСreator() {

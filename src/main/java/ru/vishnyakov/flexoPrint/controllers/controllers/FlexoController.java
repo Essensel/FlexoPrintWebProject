@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.multipart.MultipartFile;
 import ru.vishnyakov.flexoPrint.controllers.beens.Customer;
 import ru.vishnyakov.flexoPrint.controllers.beens.Order;
@@ -13,9 +14,15 @@ import ru.vishnyakov.flexoPrint.controllers.calculations.Calculation;
 import ru.vishnyakov.flexoPrint.controllers.services.CustomerService;
 import ru.vishnyakov.flexoPrint.controllers.services.OrderService;
 
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
 @Controller
@@ -53,42 +60,69 @@ public class FlexoController {
     }
 
     @GetMapping("/userChecking")
-    public String userChecking(ModelMap model) {
+    public String userChecking(ModelMap model, HttpServletRequest request) throws IOException, ServletException {
+        boolean flagForTh = false;
+        if (request.getParameter("lCount") != null) {
+            flagForTh = true;
+            Long lCount = Long.parseLong(request.getParameter("lCount"));
+            String design = request.getParameter("design");
+            int width = Integer.parseInt(request.getParameter("width"));
+            int lenght = Integer.parseInt(request.getParameter("length"));
+            String colors = request.getParameter("colors");
+            String material = request.getParameter("material");
+            String lak = request.getParameter("lak");
+            String processingText = "";
+            if (request.getParameter("lamination") != null) {
+                processingText += request.getParameter("lamination") + " ";
+            }
+            if (request.getParameter("coldFoil") != null) {
+                processingText += request.getParameter("coldFoil") + " ";
+            }
+            if (request.getParameter("hotFoil") != null) {
+                processingText += request.getParameter("hotFoil") + " ";
+            }
+            if (request.getParameter("relamDelam") != null) {
+                processingText += request.getParameter("relamDelam") + " ";
+            }
+            if (request.getParameter("congrev") != null) {
+                processingText += request.getParameter("congrev") + " ";
+            }
+            if (request.getParameter("traf") != null) {
+                processingText += request.getParameter("traf") + " ";
+            }
+            Order curentOrder = new Order(design, lCount, material, lak, processingText, width, lenght, colors);
+            Calculation calculation = new Calculation();
+
+            model.addAttribute("order", curentOrder);
+            model.addAttribute("calculation", calculation);
+            model.addAttribute("calc", String.format("%.0f", calculation.getPriceWithMarkup(curentOrder)));
+            model.addAttribute("calcOfMaterial", String.format("%.3f", calculation.getMaterialConsumption(curentOrder.getOrderSize()
+
+                    , curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors())));
+
+            System.out.println(processingText);
+            System.out.println(calculation.getPrimeCostOfCirculation(curentOrder));
+            System.out.println(" цена доп обр " + calculation.getAdditionalProcessingPrice(processingText, width) * calculation.getMaterialConsumption(lCount, width, lenght, colors) +
+                    " pri razmere t " + calculation.getMaterialConsumption(curentOrder.getOrderSize(), curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors()));
+            return "saveOrder";
+        }
         return "checkPointForUser";
     }
 
     @PostMapping("/userChecking")
-    public String addOrder(@RequestParam  MultipartFile imgFile, String firstName,
+    public String addOrder(@RequestParam MultipartFile imgFile, String firstName,
                            String lastName, String company,
                            String email, String address,
                            String phone, String comment, String design, Long lCount, String material, String colors,
-                           int length, int width,
-                           String lak, String coldFoil, String hotFoil,
-                           String lamination, String relamDelam, String congrev,
-                           String traf, String special,
-                           ModelMap model)  throws IOException {
+                           Integer length, Integer width,
+                           String lak, String addProcessing, String calculatedCost,
+                           ModelMap model) throws IOException {
 
 
         Customer newCustomer = new Customer(firstName, lastName, company, email, address, phone, comment);
         Long newCustomerId = customerService.checkNewCustomer(newCustomer);
 
-        ArrayList<String> processingList = new ArrayList<>(); //собираем дополнительную обработку
-        // из всех чекбоксов в список
-        processingList.add(coldFoil);
-        processingList.add(hotFoil);
-        processingList.add(lamination);
-        processingList.add(relamDelam);
-        processingList.add(congrev);
-        processingList.add(traf);
-        processingList.add(special);
-        String processingText = "";
-        for (int i = 0; i < processingList.size(); i++) {
-            if (processingList.get(i) != null) {
-                processingText += processingList.get(i) + " "; // информацию из всех чекбоксов собираем в 1 строку для записи в БД
-            }
-        }
-
-        Order newOrder = new Order(design,lCount,material,lak,processingText,width,length,colors);
+          Order newOrder = new Order(design,lCount,material,lak,addProcessing,width,length,colors,calculatedCost);
 
         if (!imgFile.isEmpty()) {
             if (imgFile.getContentType().contains("image")) {
@@ -97,7 +131,7 @@ public class FlexoController {
                     uploadDir.mkdir();
                 }
 
-                String imgName = UUID.randomUUID() + "_" +imgFile.getOriginalFilename();
+                String imgName = UUID.randomUUID() + "_" + imgFile.getOriginalFilename();
                 imgFile.transferTo(new File(this.uploadDirPath + imgName));
                 newOrder.setImgName(imgName);
             }
@@ -110,17 +144,15 @@ public class FlexoController {
             newOrder.setOrderСreator(customerService.getCustomerById(newCustomerId));
         }
         orderService.addOrder(newOrder);
-        Calculation calculation = new Calculation();
-        System.out.println( newOrder.getProcessing() +"---- "+ calculation.getMaterialWidght(newOrder.getWidth())+" "+
-                calculation.getAdditionalProcessingPrice(newOrder.getProcessing(),newOrder.getWidth())+" стоимость тиража "+ calculation.getPrimeCostOfCirculation(newOrder)+"расход материала "+calculation.getMaterialConsumption(newOrder.getOrderSize(),newOrder.getWidth(),newOrder.getLength(),newOrder.getColors()));
 
-        return  "redirect:/culc/"+newOrder.getId();
+        return "redirect:/culc/" + newOrder.getId();
     }
+
     @RequestMapping("/culc/{id}")
-    public String showUserPage(ModelMap model, @PathVariable Long id){
-        if(id>0){
-          Order curentOrder = this.orderService.getOrderById(id);
-                model.addAttribute("order", curentOrder);
+    public String showUserPage(ModelMap model, @PathVariable Long id) {
+        if (id > 0) {
+            Order curentOrder = this.orderService.getOrderById(id);
+            model.addAttribute("order", curentOrder);
         }
         return "calculation";
     }

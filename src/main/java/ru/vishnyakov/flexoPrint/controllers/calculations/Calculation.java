@@ -12,11 +12,13 @@ public class Calculation {
     private final int number_of_revolutions = 75; // число оборотов формного вала, требуемое для настройки 1 секции печати.
     private final int maxWidht = 330;// максимальная ширина печати в мм.(технологическая характеристика используемых печатных машин )
     private final int printWidth = 310; // масимальная ширина полотна минус технологические отступы по 10мм с 2х сторон.
-    private final double paintConsumptionOnMeter = 1.0; // г. усреднённое значение расхода КРАСКИ на 1метр квадратный печати.
-    private final double varnishConsumptionOnMeter = 1.0; // г. усреднённое значение расхода ЛАКА на 1метр квадратный печати.
+    private final double paintConsumptionOnMeter = 1.5; // г. усреднённое значение расхода КРАСКИ на 1метр квадратный печати.
+    private final double varnishConsumptionOnMeter = 1.5; // г. усреднённое значение расхода ЛАКА на 1метр квадратный печати.
     private final double paintPrice = ue * (32.5) / 1000; //цена краски за 1 г. (взято среднее значение)
-    private final double coldFoilPrice = 5000;
-    private final double hotFoilPrice = 3003;
+    private final double coldFoilPrice = 15.85; //цена за 1 м2 фольги холодного тиснени (взято среднее значение)
+    private final double hotFoilPrice = 14.48; //цена за 1 м2 фольги горячего тиснени (взято среднее значение)
+    private final double laminationPrice = 10.48; //цена за 1 м2 ламинации (взято среднее значение)
+
     /**
      * Расчет расхода краски на тираж
      *
@@ -24,6 +26,7 @@ public class Calculation {
      * @return
      */
     public double getPaintConsumption(double materialConsumption) {
+
         return paintConsumptionOnMeter * materialConsumption;
     }
 
@@ -37,27 +40,72 @@ public class Calculation {
         return varnishConsumptionOnMeter * materialConsumption;
     }
 
+
+    /**
+     * Метод расчета себестоимости тиража
+     *
+     * @param curentOrder тираж параметры вводятся пользователем
+     * @return primeCostOfCirculation - себестоимость тиража
+     */
     public double getPrimeCostOfCirculation(Order curentOrder) {
         double primeCostOfCirculation = -1.0;
         if (curentOrder != null) {
+
             double materialConsumption = getMaterialConsumption(curentOrder.getOrderSize(), curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors());
             double materialPrice = getMaterialPrice(curentOrder.getMaterialType());
             double paintConsumption = getPaintConsumption(materialConsumption);
             double paintPrice = getPaintPrice(curentOrder.getColors());
             double varnishConsumption = getVarnishConsumption(materialConsumption);
             double varnishPrice = getVarnishPrice(curentOrder.getVarnish());
-            double additionalProcessingPrice = getAdditionalProcessingPrice(curentOrder.getProcessing(),curentOrder.getWidth());
-            primeCostOfCirculation = (materialConsumption * materialPrice) + (paintConsumption * paintPrice) + (varnishConsumption * varnishPrice)
-                    + (materialConsumption*getAdditionalProcessingPrice(curentOrder.getProcessing(),curentOrder.getWidth()));
-        }
+            double additionalProcessingPrice = getAdditionalProcessingPrice(curentOrder.getProcessing(), curentOrder.getWidth());
 
+            primeCostOfCirculation = (materialConsumption * materialPrice) + (paintConsumption * paintPrice) + (varnishConsumption * varnishPrice)
+                    + (materialConsumption * additionalProcessingPrice);
+            if (curentOrder.getDesign().equals("Да")) {
+                primeCostOfCirculation += 1000 * Integer.parseInt(curentOrder.getColors()); // если необходима разработка клише увеличиваем стоимоть тиража на затраты на изготовление клише в зависимости от количества цветов печати. средняя цена 1 матрицы 1000 руб
+            }
+            primeCostOfCirculation = primeCostOfCirculation + ((primeCostOfCirculation / 100) * 2.5); // накладные расходы равны 2.5%
+            primeCostOfCirculation = primeCostOfCirculation + ((primeCostOfCirculation / 100) * 12.5); // расходы на заработную плату 12.5%
+        }
         return primeCostOfCirculation;
     }
 
     /**
+     * Расчет итоговой стоимости тиражас учетом торговой наценки исходя из торговой политики компании
+     *
+     * @return
+     */
+    public double getPriceWithMarkup(Order curentOrder) {
+        double priceWithMarkUp = getPrimeCostOfCirculation(curentOrder);
+        double materialConsumption = getMaterialConsumption(curentOrder.getOrderSize(), curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors());
+        if (materialConsumption <= 10.0) {
+            priceWithMarkUp = priceWithMarkUp * 4; //  цена на тиражи < 10 m2 увеличена в 4 раза.
+        }
+        if (materialConsumption > 10.0 && materialConsumption <= 100.0) {
+            priceWithMarkUp = priceWithMarkUp * 3;} //  цена на тиражи от 10 до 100 m2 увеличена в 3 раза.
+
+        if (materialConsumption > 100.0 && materialConsumption <= 200.0) {
+                priceWithMarkUp = priceWithMarkUp * 2;
+            } //  цена на тиражи от 100 до 200 m2 увеличена в 2 раза.
+
+        if (materialConsumption > 1000.0 && materialConsumption <= 5000.0) {
+            priceWithMarkUp = priceWithMarkUp - ((priceWithMarkUp / 100) * 5); //  при печати тиражей от 1000 до 5000 m2 скидка 5%.
+        }
+        if (materialConsumption > 5000.0 && materialConsumption <= 10000.0) {
+            priceWithMarkUp = priceWithMarkUp - ((priceWithMarkUp / 100) * 10); //  при печати тиражей от 5000 до 10000 m2 скидка 10%.
+        }
+        if (materialConsumption > 10000.0) {
+            priceWithMarkUp = priceWithMarkUp - ((priceWithMarkUp / 100) * 20); //  при печати тиражей от 10000 m2 скидка 20%.
+        }
+
+        return priceWithMarkUp;
+    }
+
+    /**
      * Расчет стоимости доп обработки
+     *
      * @param key виды доп обрабоки вводятся пользователем сохраняются в 1 строке. каждое слово разделённое пробелом уникально,
-     * представляет отдельный вид допобработки, цены на каждую из них отличаются. В каждом тираже может быть до 7 видов различных доп обработок.
+     *            представляет отдельный вид допобработки, цены на каждую из них отличаются. В каждом тираже может быть до 7 видов различных доп обработок.
      * @return цена доп обработки на 1 м квадратный печати.
      */
     public double getAdditionalProcessingPrice(String key, int labelWight) {
@@ -66,7 +114,7 @@ public class Calculation {
         if (key != null) {
         }
         if (key.equals("") || key.equals(" ")) {
-            additioanlProcessingPrice = 0.0; //ксли доп обработки нет цена 0
+            additioanlProcessingPrice = 0.0; //сли доп обработки нет, цена 0
         } else {
             key.trim();
             double materialWidght = getMaterialWidght(labelWight);
@@ -75,13 +123,13 @@ public class Calculation {
             for (String retval : key.split(" ")) {
                 switch (retval) {
                     case "coldFoil":
-                        additioanlProcessingPrice += (coldFoilPrice/materialWidght); // цена за 1 м.кв. = средняя цена за 1 стандартный ролик фольги хол. тиснения в 2000 метров погонных / на ширину материала конкретного тиража.
+                        additioanlProcessingPrice += coldFoilPrice;
                         break;
                     case "hotFoil":
-                        additioanlProcessingPrice += (hotFoilPrice/materialWidght);
+                        additioanlProcessingPrice += hotFoilPrice;
                         break;
                     case "lamination":
-                        additioanlProcessingPrice += 3;
+                        additioanlProcessingPrice += laminationPrice;
                         break;
                     case "relamDelam":
                         additioanlProcessingPrice += 4;
@@ -91,9 +139,6 @@ public class Calculation {
                         break;
                     case "traf":
                         additioanlProcessingPrice += 6;
-                        break;
-                    case "special":
-                        additioanlProcessingPrice += 7;
                         break;
                 }
             }
@@ -210,7 +255,7 @@ public class Calculation {
         double settingLength = getSettingLength(colors);
         double materialWidth = getMaterialWidght(labelWidth);
         double defectiveMaterial = getDefectiveMaterialSize(colors);
-        Double materialConsumption = (circulationSize + (settingLength * (materialWidth/1000))) / (1 - defectiveMaterial); // ширину материала в мм делим на 1000 для перевода в метры
+        Double materialConsumption = (circulationSize + (settingLength * (materialWidth / 1000))) / (1 - defectiveMaterial); // ширину материала в мм делим на 1000 для перевода в метры
         return materialConsumption;
     }
 
@@ -228,5 +273,21 @@ public class Calculation {
         int materialWidght = report * rowCount + 20; // ширина материала = рапорт(ширина этикетки + 3мм на отступ с каждой стороны(6 мм))* число рядов печати + 20мм технологический отступ.
 
         return materialWidght;
+    }
+
+    public String getPriceForOneLabel(Order curentOrder) {
+        double price = 0.0;
+        if (curentOrder != null) {
+            price = getPriceWithMarkup(curentOrder) / curentOrder.getOrderSize();
+        }
+        return String.format("%.3f", price);
+    }
+
+    public String getPriceOneMeter(Order curentOrder) {
+        double price = 0.0;
+        if (curentOrder != null) {
+            price = getPriceWithMarkup(curentOrder) / getMaterialConsumption(curentOrder.getOrderSize(), curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors());
+        }
+        return String.format("%.3f", price);
     }
 }
