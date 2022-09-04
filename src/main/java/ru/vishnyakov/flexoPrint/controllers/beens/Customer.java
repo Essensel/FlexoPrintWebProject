@@ -12,7 +12,7 @@ public class Customer {
     @Id
     @GenericGenerator(name = "native_generator", strategy = "native")
     @GeneratedValue(generator = "native_generator")
-  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //  @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String last_name;
@@ -22,7 +22,7 @@ public class Customer {
     private String phone;
     private String comment;
 
-    @OneToMany (mappedBy = "orderСreator", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "orderСreator", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     protected Collection<Order> orders;
 
     public Customer() {
@@ -93,6 +93,22 @@ public class Customer {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override

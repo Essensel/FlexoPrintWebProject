@@ -1,7 +1,6 @@
 package ru.vishnyakov.flexoPrint.controllers.beens;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -9,44 +8,59 @@ import java.util.GregorianCalendar;
 
 @Entity(name = "orders")
 public class Order {
-   @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-protected Long id;
-    protected Long orderSize;
-protected String colors;
-    protected int width;
-    private int length;
-    protected String materialType;
-    protected String varnish;
-    protected String processing;
+    protected Long id;
+    protected Long orderSize = Long.valueOf(0);
+    protected String colors = "неопределено";
+    protected int width = 0;
+    private int length = 0;
+    protected String materialType = "неопределено";
+    protected String varnish = "неопределено";
+    protected String processing = "неопределено";
     protected String imgName;
-    protected String design;
+    protected String design = "неопределено";
     protected Date orderDate;
-    protected String calculatedCost;
+    protected String calculatedCost = "неопределено";
+    protected String type = "неопределено";
+    protected String status = "НЕОБРАБОТАННО";
+    protected String meterssize = "неопределено";
+
     @ManyToOne
     protected Customer orderСreator;
 
-public Order(){
-    Calendar calendar = new GregorianCalendar();
-    this.orderDate = calendar.getTime();
-}
-
-    public Order(String design,Long orderSize, String materialType, String varnish,String processing,
-                 int width, int length, String colors, String calculatedCost ){
-this.orderSize = orderSize;
-this.colors = colors;
-this.design = design;
-this.materialType = materialType;
-this.varnish = varnish;
-this.processing = processing;
-this.width = width;
-this.length = length;
-this.calculatedCost = calculatedCost;
+    public Order() {
         Calendar calendar = new GregorianCalendar();
         this.orderDate = calendar.getTime();
     }
-    public Order(String design,Long orderSize, String materialType, String varnish,String processing,
-                 int width, int length, String colors){
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String status) {
+        this.type = status;
+    }
+
+    public Order(String design, Long orderSize, String materialType, String varnish, String processing,
+                 int width, int length, String colors, String calculatedCost, String status, String meterssize) {
+        this.orderSize = orderSize;
+        this.colors = colors;
+        this.design = design;
+        this.materialType = materialType;
+        this.varnish = varnish;
+        this.processing = processing;
+        this.width = width;
+        this.length = length;
+        this.calculatedCost = calculatedCost;
+        this.type = status;
+        this.meterssize = meterssize;
+        Calendar calendar = new GregorianCalendar();
+        this.orderDate = calendar.getTime();
+    }
+
+    public Order(String design, Long orderSize, String materialType, String varnish, String processing,
+                 int width, int length, String colors) {
         this.orderSize = orderSize;
         this.colors = colors;
         this.design = design;
@@ -57,6 +71,14 @@ this.calculatedCost = calculatedCost;
         this.length = length;
         Calendar calendar = new GregorianCalendar();
         this.orderDate = calendar.getTime();
+    }
+
+    public String getMeterssize() {
+        return meterssize;
+    }
+
+    public void setMeterssize(String orderSizeInMeters) {
+        this.meterssize = orderSizeInMeters;
     }
 
     public String getCalculatedCost() {
@@ -75,6 +97,13 @@ this.calculatedCost = calculatedCost;
         this.colors = colors;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public int getWidth() {
         return width;
@@ -159,8 +188,9 @@ this.calculatedCost = calculatedCost;
     public String getProcessing() {
         return processing;
     }
+
     public String geTextOfProcessing() {
-   String processingRussianTxt = "";
+        String processingRussianTxt = "";
 
         if (processing.equals("") || processing.equals(" ")) {
             processingRussianTxt = "Без дополнительной обработки";
@@ -170,31 +200,31 @@ this.calculatedCost = calculatedCost;
             for (String retval : processing.split(" ")) {
                 switch (retval) {
                     case "coldFoil":
-                       processingRussianTxt+="Холодное тиснение. ";
+                        processingRussianTxt += "Холодное тиснение. ";
                         break;
                     case "hotFoil":
-                        processingRussianTxt+="Горячее тиснение. ";
+                        processingRussianTxt += "Горячее тиснение. ";
                         break;
                     case "lamination":
-                       processingRussianTxt+="Ламинация. ";
-                       break;
+                        processingRussianTxt += "Ламинация. ";
+                        break;
                     case "relamDelam":
-                        processingRussianTxt+="Печать по клеевому слою. ";
+                        processingRussianTxt += "Печать по клеевому слою. ";
                         break;
                     case "congrev":
-                        processingRussianTxt+="Конгрев. ";
+                        processingRussianTxt += "Конгрев. ";
                         break;
                     case "traf":
-                        processingRussianTxt+="Трафаретная печать. ";
+                        processingRussianTxt += "Трафаретная печать. ";
                         break;
                 }
             }
         }
 
-return processingRussianTxt;
+        return processingRussianTxt;
     }
 
     public Customer getOrderСreator() {
-        return orderСreator;
+        return this.orderСreator;
     }
 }

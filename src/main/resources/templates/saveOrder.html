@@ -339,11 +339,17 @@
 
             <div class="col-md-7 col-lg-8" style="color: green">
                 <div class="text">
-                    <h3 th:text="'Стоимость тиража составляет: '+ ${calc} +' руб.'"></h3>
-                    <h4 th:text="'Размер тиража в квадратных метрах: '+ ${calcOfMaterial}+' м2.'"></h4>
-                    <h4 th:text="'Стоимость квадратного метра: '+ ${calculation.getPriceOneMeter(order)}+' руб.'"></h4>
-                    <h4 th:text="'Стоимость одной этикетки составляет: '+ ${calculation.getPriceForOneLabel(order)} +' руб.'"></h4>
+                    <h3 th:text="'Стоимость тиража составляет: '+ ${calculation.getCalculationResult(order)[0]} +' руб.'"></h3>
+                    <h4 th:text="'Стоимость одного квадратного метра: '+ ${calculation.getCalculationResult(order)[3]} +' руб.'"></h4>
+                    <h4 th:text="'Стоимость одной этикетки составляет: '+ ${calculation.getCalculationResult(order)[1]} +' руб.'"></h4>
+                    <h4 th:text="'Размер тиража в метрах квадратных (расчет приблизителен): '+ ${calculation.getCalculationResult(order)[2]} +' метров квадратных.'"></h4>
+                    <p> Если хотите что-то изменить в расчетах? Попробуёте ещё раз.</p>
+                    <a class="btn btn-primary btn-lg" href="/userChecking" style="margin-bottom:2% ">Изменить расчет</a>
+                    <p> Считаете цена должна быть ниже?
+                        Наших менеджеров очень легко в этом убедить.</p>
+                    <p> Для того что-бы отправить заявку, заполните форму ниже... </p>
                 </div>
+
             </div>
 
         </div>
@@ -355,34 +361,39 @@
                 <form class="needs-validation" enctype="multipart/form-data" action="/userChecking" method="post"
                       novalidate>
                     <div hidden>
-                    <div>
-                    <input type="number" name="lCount"
-                         th:value="${order.getOrderSize()}">
-                    </div>
-                    <div>
-                        <input type="text" name="design"
-                         th:value="${order.getDesign()}">
-                    </div>
-                    <div> <input type="text" name="material"
-                         th:value="${order.getMaterialType()}">
-                    </div>
-                    <div> <input type="text" name="colors"
-                         th:value="${order.getColors()}">
-                    </div>
-                    <div> <input type="number" name="length"
-                         th:value="${order.getLength()}">
-                    </div>
-                    <div> <input type="number" name="width"
-                         th:value="${order.getWidth()}">
-                    </div>  <div>
-                    <input type="text" name="lak"
-                                 th:value="${order.getVarnish()}">
-                </div>
-                    <div> <input type="text" name="addProcessing"
-                         th:value="${order.getProcessing()}">
-                    </div>
+                        <div>
+                            <input type="number" name="lCount"
+                                   th:value="${order.getOrderSize()}">
+                        </div>
+                        <div>
+                            <input type="text" name="design"
+                                   th:value="${order.getDesign()}">
+                        </div>
+                        <div><input type="text" name="material"
+                                    th:value="${order.getMaterialType()}">
+                        </div>
+                        <div><input type="text" name="colors"
+                                    th:value="${order.getColors()}">
+                        </div>
+                        <div><input type="number" name="length"
+                                    th:value="${order.getLength()}">
+                        </div>
+                        <div><input type="number" name="width"
+                                    th:value="${order.getWidth()}">
+                        </div>
+                        <div>
+                            <input type="text" name="lak"
+                                   th:value="${order.getVarnish()}">
+                        </div>
+                        <div><input type="text" name="addProcessing"
+                                    th:value="${order.getProcessing()}">
+                        </div>
+                        <div>
                         <input type="text" name="calculatedCost"
-                        th:value="${calc}">
+                               th:value="${calculation.getCalculationResult(order)[0]}">
+                    </div>
+                        <div>  <input type="text" name="orderSizeInMeters"
+                                      th:value="${calculation.getCalculationResult(order)[2]}"> </div>
                     </div>
 
                     <div class="row g-3">

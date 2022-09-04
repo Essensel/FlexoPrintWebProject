@@ -3,6 +3,7 @@ package ru.vishnyakov.flexoPrint.controllers.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +18,9 @@ import ru.vishnyakov.flexoPrint.controllers.services.OrderService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
 @Controller
@@ -95,15 +93,8 @@ public class FlexoController {
 
             model.addAttribute("order", curentOrder);
             model.addAttribute("calculation", calculation);
-            model.addAttribute("calc", String.format("%.0f", calculation.getPriceWithMarkup(curentOrder)));
-            model.addAttribute("calcOfMaterial", String.format("%.3f", calculation.getMaterialConsumption(curentOrder.getOrderSize()
 
-                    , curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors())));
 
-            System.out.println(processingText);
-            System.out.println(calculation.getPrimeCostOfCirculation(curentOrder));
-            System.out.println(" цена доп обр " + calculation.getAdditionalProcessingPrice(processingText, width) * calculation.getMaterialConsumption(lCount, width, lenght, colors) +
-                    " pri razmere t " + calculation.getMaterialConsumption(curentOrder.getOrderSize(), curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors()));
             return "saveOrder";
         }
         return "checkPointForUser";
@@ -115,14 +106,14 @@ public class FlexoController {
                            String email, String address,
                            String phone, String comment, String design, Long lCount, String material, String colors,
                            Integer length, Integer width,
-                           String lak, String addProcessing, String calculatedCost,
+                           String lak, String addProcessing, String calculatedCost, String orderSizeInMeters,
                            ModelMap model) throws IOException {
 
-
+        System.out.println(orderSizeInMeters);
         Customer newCustomer = new Customer(firstName, lastName, company, email, address, phone, comment);
         Long newCustomerId = customerService.checkNewCustomer(newCustomer);
-
-          Order newOrder = new Order(design,lCount,material,lak,addProcessing,width,length,colors,calculatedCost);
+        String orderStatus = "новый заказ";
+        Order newOrder = new Order(design, lCount, material, lak, addProcessing, width, length, colors, calculatedCost, orderStatus, orderSizeInMeters);
 
         if (!imgFile.isEmpty()) {
             if (imgFile.getContentType().contains("image")) {
@@ -164,11 +155,23 @@ public class FlexoController {
                                  String phone, String comment,
                                  ModelMap model) {
         Customer newCustomer = new Customer(firstName, lastName, company, email, address, phone, comment);
-        customerService.saveCustomer(newCustomer);
+        Long id = customerService.checkNewCustomer(newCustomer);
         Order newOrder = new Order();
-        newOrder.setOrderСreator(newCustomer);
+        if (id == null) {
+            customerService.saveCustomer(newCustomer);
+            newOrder.setOrderСreator(newCustomer);
+        } else {
+            newOrder.setOrderСreator(customerService.getCustomerById(id));
+        }
+        newOrder.setType("заявка на расчет");
         orderService.addOrder(newOrder);
+
         return "afterChecking";
+    }
+
+    @GetMapping("/addUser")
+    public String addUser() {
+        return "register";
     }
 
     @GetMapping("/label")
@@ -220,4 +223,102 @@ public class FlexoController {
     public String showPack() {
         return "pack";
     }
+
+    @GetMapping(value = "/list")
+    public String newsList(ModelMap model, @RequestParam(name = "page", defaultValue = "1") Integer pageNum) {
+        //новостей на странице
+        int pageSize = 20;
+        List<Order> ordersList = orderService.getOrdersList(pageNum, pageSize);
+
+
+        HashMap<Long, Long> map = new HashMap<>();
+        for (int i = 0; i < ordersList.size(); i++) {
+            map.put(ordersList.get(i).getId(), ordersList.get(i).getOrderСreator().getId());
+        }
+
+        model.addAttribute("ordersList", ordersList);
+        model.addAttribute("map", map);
+        model.addAttribute("customers", customerService);
+        model.addAttribute("img", uploadDirPath);
+
+
+        Integer prevPage, nextPage;
+        //посчитать страницы для кнопок "вперед" и "назад"
+
+        if (pageNum < 2) {
+            prevPage = null;
+        } else {
+            prevPage = pageNum - 1;
+        }
+        //всего страниц
+        int pageCount = orderService.getCount() / pageSize + 1;
+        //если последняя, то null
+        if (pageNum >= pageCount) {
+            nextPage = null;
+        } else {
+            nextPage = pageNum + 1;
+        }
+        System.out.println(prevPage + " prev");
+        System.out.println(nextPage + " next");
+        model.addAttribute("prevPage", prevPage);
+        model.addAttribute("nextPage", nextPage);
+
+        return "orderslist";
+    }
+
+    @GetMapping(value = "/list/{id}")
+    public String detailOrder(ModelMap model, @PathVariable Long id) {
+
+        model.addAttribute("curentOrder", orderService.getOrderById(id));
+        model.addAttribute("curentCustomer", orderService.getOrderById(id).getOrderСreator());
+        System.out.println(orderService.getOrderById(id).getProcessing());
+        System.out.println(orderService.getOrderById(id).getProcessing().contains("hotFoil"));
+        return "detail";
+    }
+
+    @PostMapping(value = "/list/{id}")
+    public String uodateCustomersOrder(@RequestParam MultipartFile imgFile, String firstName,
+                                       String lastName, String company,
+                                       String email, String address,
+                                       String phone, String comment, String design, Long lCount, String material, String colors,
+                                       Integer length, Integer width,
+                                       String lak, String coldFoil, String hotFoil, String lamination,
+                                       String relamDelam, String congrev, String traf, String calc, String meters, @PathVariable String id) {
+        String addProcessing = "";
+        if (coldFoil != null) {
+            addProcessing += "coldFoil ";
+        }
+        if (hotFoil != null) {
+            addProcessing += "hotFoil ";
+        }
+        if (lamination != null) {
+            addProcessing += "lamination ";
+        }
+        if (relamDelam != null) {
+            addProcessing += "relamDelam ";
+        }
+        if (congrev != null) {
+            addProcessing += "congrev ";
+        }
+        if (traf != null) {
+            addProcessing += "traf ";
+        }
+
+        return "redirect:/list";
+    }
+
+
+    @GetMapping("/delete/{id}")
+    public String deleteOrder(ModelMap model, @PathVariable Long id) {
+        boolean isDeleted = false;
+        if (orderService.deleteById(id)) {
+            isDeleted = true;
+
+
+            return "redirect:/list";
+        }
+
+        return "redirect:/culc/" + id;
+    }
+
 }

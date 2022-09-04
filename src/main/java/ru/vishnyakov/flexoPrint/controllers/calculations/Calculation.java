@@ -2,6 +2,7 @@ package ru.vishnyakov.flexoPrint.controllers.calculations;
 
 import ru.vishnyakov.flexoPrint.controllers.beens.Order;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 ;
@@ -25,7 +26,7 @@ public class Calculation {
      * @param materialConsumption расход материала в метрах квадратных
      * @return
      */
-    public double getPaintConsumption(double materialConsumption) {
+    private double getPaintConsumption(double materialConsumption) {
 
         return paintConsumptionOnMeter * materialConsumption;
     }
@@ -36,7 +37,7 @@ public class Calculation {
      * @param materialConsumption расход материала в метрах квадратных
      * @return
      */
-    public double getVarnishConsumption(double materialConsumption) {
+    private double getVarnishConsumption(double materialConsumption) {
         return varnishConsumptionOnMeter * materialConsumption;
     }
 
@@ -47,7 +48,7 @@ public class Calculation {
      * @param curentOrder тираж параметры вводятся пользователем
      * @return primeCostOfCirculation - себестоимость тиража
      */
-    public double getPrimeCostOfCirculation(Order curentOrder) {
+   public Double getPrimeCostOfCirculation(Order curentOrder) {
         double primeCostOfCirculation = -1.0;
         if (curentOrder != null) {
 
@@ -62,7 +63,7 @@ public class Calculation {
             primeCostOfCirculation = (materialConsumption * materialPrice) + (paintConsumption * paintPrice) + (varnishConsumption * varnishPrice)
                     + (materialConsumption * additionalProcessingPrice);
             if (curentOrder.getDesign().equals("Да")) {
-                primeCostOfCirculation += 1000 * Integer.parseInt(curentOrder.getColors()); // если необходима разработка клише увеличиваем стоимоть тиража на затраты на изготовление клише в зависимости от количества цветов печати. средняя цена 1 матрицы 1000 руб
+                primeCostOfCirculation += (1000 * Integer.parseInt(curentOrder.getColors())); // если необходима разработка клише увеличиваем стоимоть тиража на затраты на изготовление клише в зависимости от количества цветов печати. средняя цена 1 матрицы 1000 руб
             }
             primeCostOfCirculation = primeCostOfCirculation + ((primeCostOfCirculation / 100) * 2.5); // накладные расходы равны 2.5%
             primeCostOfCirculation = primeCostOfCirculation + ((primeCostOfCirculation / 100) * 12.5); // расходы на заработную плату 12.5%
@@ -82,20 +83,21 @@ public class Calculation {
             priceWithMarkUp = priceWithMarkUp * 4; //  цена на тиражи < 10 m2 увеличена в 4 раза.
         }
         if (materialConsumption > 10.0 && materialConsumption <= 100.0) {
-            priceWithMarkUp = priceWithMarkUp * 3;} //  цена на тиражи от 10 до 100 m2 увеличена в 3 раза.
+            priceWithMarkUp = priceWithMarkUp * 3;
+        } //  цена на тиражи от 10 до 100 m2 увеличена в 3 раза.
 
         if (materialConsumption > 100.0 && materialConsumption <= 200.0) {
-                priceWithMarkUp = priceWithMarkUp * 2;
-            } //  цена на тиражи от 100 до 200 m2 увеличена в 2 раза.
+            priceWithMarkUp = priceWithMarkUp * 2;
+        } //  цена на тиражи от 100 до 200 m2 увеличена в 2 раза.
 
         if (materialConsumption > 1000.0 && materialConsumption <= 5000.0) {
-            priceWithMarkUp = priceWithMarkUp - ((priceWithMarkUp / 100) * 5); //  при печати тиражей от 1000 до 5000 m2 скидка 5%.
+            priceWithMarkUp = priceWithMarkUp +((priceWithMarkUp / 100) * 40); //  при печати тиражей от 1000 до 5000 m2 наценка 40%.
         }
         if (materialConsumption > 5000.0 && materialConsumption <= 10000.0) {
-            priceWithMarkUp = priceWithMarkUp - ((priceWithMarkUp / 100) * 10); //  при печати тиражей от 5000 до 10000 m2 скидка 10%.
+            priceWithMarkUp = priceWithMarkUp + ((priceWithMarkUp / 100) * 30); //  при печати тиражей от 5000 до 10000 m2 наценка 30%.
         }
         if (materialConsumption > 10000.0) {
-            priceWithMarkUp = priceWithMarkUp - ((priceWithMarkUp / 100) * 20); //  при печати тиражей от 10000 m2 скидка 20%.
+            priceWithMarkUp = priceWithMarkUp + ((priceWithMarkUp / 100) * 20); //  при печати тиражей от 10000 m2 наценка 20%.
         }
 
         return priceWithMarkUp;
@@ -108,7 +110,7 @@ public class Calculation {
      *            представляет отдельный вид допобработки, цены на каждую из них отличаются. В каждом тираже может быть до 7 видов различных доп обработок.
      * @return цена доп обработки на 1 м квадратный печати.
      */
-    public double getAdditionalProcessingPrice(String key, int labelWight) {
+    private double getAdditionalProcessingPrice(String key, int labelWight) {
 
         double additioanlProcessingPrice = -1.0;
         if (key != null) {
@@ -245,7 +247,7 @@ public class Calculation {
      * @param colors                 количество цветов печати
      * @return
      */
-    public double getMaterialConsumption(Long circulationSizeInlabel, int labelWidth, int labelLength, String colors) {
+    private double getMaterialConsumption(Long circulationSizeInlabel, int labelWidth, int labelLength, String colors) {
     /*    Double circulationSize; // размер тиража в квадратных метрах
         Double settingLength; // длина настройки
         Double materialWidth; // ширина материала
@@ -267,7 +269,7 @@ public class Calculation {
      *
      * @param labelWight ширина этикетки, задается пользователем.передается из формы. минимум 6 максимум 304мм
      */
-    public double getMaterialWidght(int labelWight) {
+    private double getMaterialWidght(int labelWight) {
         int report = labelWight + 6; //определяем рапорт - добавляем к ширине этикетки 6мм отступа
         int rowCount = printWidth / (report); //определем максимальное количество рядов печати округляем до целого
         int materialWidght = report * rowCount + 20; // ширина материала = рапорт(ширина этикетки + 3мм на отступ с каждой стороны(6 мм))* число рядов печати + 20мм технологический отступ.
@@ -275,19 +277,25 @@ public class Calculation {
         return materialWidght;
     }
 
-    public String getPriceForOneLabel(Order curentOrder) {
-        double price = 0.0;
-        if (curentOrder != null) {
-            price = getPriceWithMarkup(curentOrder) / curentOrder.getOrderSize();
-        }
-        return String.format("%.3f", price);
-    }
 
-    public String getPriceOneMeter(Order curentOrder) {
-        double price = 0.0;
+    public String[] getCalculationResult(Order curentOrder) {
+        String[] result = new String[4];
         if (curentOrder != null) {
-            price = getPriceWithMarkup(curentOrder) / getMaterialConsumption(curentOrder.getOrderSize(), curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors());
+            double finalPriceOfCirculation = getPriceWithMarkup(curentOrder);
+            double priceForOneLabel = (double) (finalPriceOfCirculation / curentOrder.getOrderSize());
+            DecimalFormat decimalFormat = new DecimalFormat("#.##");
+            String priceStr = decimalFormat.format(priceForOneLabel);
+            priceForOneLabel = Double.parseDouble(priceStr.replace(",", "."));
+            int totalPrice = (int) (priceForOneLabel * (curentOrder.getOrderSize()));
+
+            double priceOfMeter = finalPriceOfCirculation / getMaterialConsumption(curentOrder.getOrderSize(), curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors());
+            double circulationSice = getMaterialConsumption(curentOrder.getOrderSize(), curentOrder.getWidth(), curentOrder.getLength(), curentOrder.getColors());
+            result[0] = totalPrice + "";
+            result[1] = String.format("%.2f", priceForOneLabel);
+            result[2] = String.format("%.3f", circulationSice);
+            result[3] = String.format("%.2f", priceOfMeter);
+
         }
-        return String.format("%.3f", price);
+        return result;
     }
 }
